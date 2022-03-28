@@ -1,10 +1,13 @@
+## 前言
+
+了解了如何配置插件基础，我们来看看如何通过插件修改页面的值，以为内容为向页面注入js的多种方式对比。
 ### 动态插入
 
-使用 `chrome.scripting.executeScript` 语法
+使用 `chrome.scripting.executeScript` 语法, 获取到需要插入的tab,向其插入js
 
 ```typescript
 chrome.scripting.executeScript({
-  target: { tabId: tab?.id as number },
+  target: { tabId: tab?.id },
   func: () => {
     console.log(`injected`)
   },
@@ -13,7 +16,7 @@ chrome.scripting.executeScript({
 
 ### 声明式注入
 
-使用 `content_scripts` 声明式注入
+在 `manifest.json` 文件中使用 `content_scripts` 声明式注入
 
 ```json
 // manifest.json
@@ -48,7 +51,7 @@ chrome.scripting.executeScript({
 
 ```ts
 chrome.scripting.executeScript({
-  target: { tabId: tab?.id as number },
+  target: { tabId: tab?.id },
   func: () => {
     const s = document.createElement('script')
     const url = chrome.runtime.getURL('baidu.js')
