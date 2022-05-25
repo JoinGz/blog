@@ -155,3 +155,72 @@ let arr3 = copyArr3(['1', 1, {a: 'a'}]) // [string, number, {a: string;}] 没有
 这两个组成的联合类型就能被TS正确推断出来（我的推断，验证需要看TS实现细节）。
 
 参考我的[提问](https://segmentfault.com/q/1010000041878054/a-1020000041882785?_ea=238927828)
+
+
+### 如何删除值为never的属性
+
+如
+```ts
+{
+  a: string,
+  b: number,
+  c: never
+}
+// 处理后
+{
+  a: string,
+  b: number
+}
+```
+
+- 在联合类型中的never会被忽略
+
+```ts
+ type exp1 = string | never | number // string | number
+```
+
+所以，我们返回一个联合类型，其中值不是never的就保持原来的key,是never的返回never就可以剔除值为never的key了。
+
+```ts
+type deletedNever<T> = {[P in keyof T]: T[P] extends never ? never : P}[keyof T]
+```
+
+前面的`{[P in keyof T]: T[P] extends never ? never : P}`主要是把key转换为value,因为后面我们要`Pick`出需要的key。(把值为never的key剔除)
+
+重点为后面的`[keyof T]`
+
+如：
+
+```ts
+{
+  a: 'a',
+  b: 'b',
+  c: never
+}['a' | 'b' | 'c']
+// 得到
+
+'a' | 'b' | never
+
+// ts剔除never后
+
+//得到 'a' | 'b'
+
+```
+拿到需要的key了，我们在`Pick`一下即可。
+
+完整代码
+
+```ts
+// 获取到value为never的key
+type deletedNever<T> = {[P in keyof T]: T[P] extends never ? never : P}[keyof T]
+
+// 在筛选就就ok
+
+type uix<T> = Pick<T, deletedNever<T>>
+
+type uiox = uix<{ name: string, ok: never, l: number }>
+// {
+//   name: string;
+//   l: number;
+// }
+```
