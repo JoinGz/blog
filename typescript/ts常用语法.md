@@ -224,3 +224,25 @@ type uiox = uix<{ name: string, ok: never, l: number }>
 //   l: number;
 // }
 ```
+
+### extends {}
+
+
+
+```ts
+type bool = '' extends {} ? true : false // true
+type bool2 = 0 extends {} ? true : false // true
+type bool3 = true extends {} ? true : false // true
+type bool4 = null extends {} ? true : false // false ( with strictNullChecks )
+type bool5 = undefined extends {} ? true : false // false ( with strictNullChecks )
+```
+
+`{}`类型除了`null`和`undefined`都满足分配。包括原始类型。
+
+`unknown`则是所有都满足。
+```ts
+type bool6 = null extends unknown ? true : false // true
+type bool7 = undefined extends unknown ? true : false // true
+```
+
+[参考](https://stackoverflow.com/questions/61648189/typescript-generic-type-parameters-t-vs-t-extends)
