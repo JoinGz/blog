@@ -148,7 +148,7 @@ type boolString5 = Example15<1 | ''> // "false"
 type boolString6 = Example15<['', 1]> // "false"
 type boolString7 = Example15<['']> // "true"
 ```
-此时也没有更改分配性，T需要符合\[string\]的约束。就是符合这个元祖的约束即可。
+此时也没有更改分配性，T需要符合\[string\]的约束。就是符合这个元组的约束即可。
 
 经过上面的情况梳理，取消掉分配性需要extends两边同时加上括号。
 
@@ -172,3 +172,9 @@ ts中的extends关键字，主要用法就是
 + 条件类型
   - 当左边的类型约束完全符合右边的类型约束时
   - 分配条件类型
+
+
+### 参考
+
+<https://qdmana.com/2021/09/20210915112230348i.html>
+<https://segmentfault.com/a/1190000040769584>
